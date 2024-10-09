@@ -1,30 +1,41 @@
-import React, { useState } from 'react';
-
-interface ListCreatorProps {
-    listTitle: string;
-    setListTitle: (title: string) => void;
-    listTask: string;
-    setListTask: (task: string) => void;
+interface Task {
+    title: string;
+    tasks: string[];
 }
 
-const ListCreator = ({ listTitle, setListTitle, listTask, setListTask }) => {
-    const [tasks, setTasks] = useState<string[]>([]);
+interface ListCreatorProps {
+    lists: Task[];
+    setLists: (lists: Task[]) => void;
+    listTitle: string;
+    setListTitle: (title: string) => void;
+    newListTask: string;
+    setNewListTask: (task: string) => void;
+    tasks: string[];
+    setTasks: (tasks: string[]) => void;
+}
 
+const ListCreator = ({lists, setLists, listTitle, setListTitle, newListTask, setNewListTask, tasks, setTasks}: ListCreatorProps) => {
     const addTask = () => {
-        if (listTask.trim() !== '') {
-            setTasks([...tasks, listTask]);
-            setListTask('');
+        if (newListTask.trim() !== '') {
+            setTasks([...tasks, newListTask]);
+            setNewListTask('');
+        }
+    };
+
+    const createList = () => {
+        if (listTitle.trim() !== '' && tasks.length > 0) {
+            const newList = { title: listTitle, tasks };
+            setLists([...lists, newList]);
+            console.log('Updated Lists:', [...lists, newList])
+            setListTitle('');
+            setTasks([]);
+        } else {
+            alert('Заголовок списку або задачі не можуть бути пустими');
         }
     };
 
     const updateTask = (index: number, value: string) => {
-        const updatedTasks = tasks.map((task, i) => {
-            if (i === index) {
-                return value;
-            } else {
-                return task;
-            }
-        });
+        const updatedTasks = tasks.map((task, i) => (i === index ? value : task));
         setTasks(updatedTasks);
     };
 
@@ -65,20 +76,15 @@ const ListCreator = ({ listTitle, setListTitle, listTask, setListTask }) => {
                     <textarea
                         placeholder="Введіть задачу"
                         className="w-full h-16 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-amber-400 resize-none"
-                        value={listTask}
-                        onChange={(e) => setListTask(e.target.value)}
+                        value={newListTask}
+                        onChange={(e) => setNewListTask(e.target.value)}
                     />
-                    <button
-                        className="ml-2 p-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition duration-200"
-                        onClick={addTask}
-                    >
+                    <button className="ml-2 p-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition duration-200" onClick={addTask}>
                         Додати завдання
                     </button>
                 </li>
             </ul>
-            <button
-                className="mt-4 w-full p-2 text-white bg-amber-600 rounded-md hover:bg-amber-700 transition duration-200"
-            >
+            <button className="mt-4 w-full p-2 text-white bg-amber-600 rounded-md hover:bg-amber-700 transition duration-200" onClick={createList}>
                 Сторити нотатку для виконання
             </button>
         </div>
