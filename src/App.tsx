@@ -4,24 +4,24 @@ import ListCreator from "./components/ListCreator";
 import ListViewer from "./components/ListViewer";
 
 function App() {
-    const [titleTask, setTitleTask] = useState('');
-    const [tasks, setTasks] = useState<string[]>([]);
+    const [lists, setLists] = useState<Task[]>([]); // Зберігаємо всі списки
+    const [listTitle, setListTitle] = useState(''); // Заголовок списку
+    const [newListTask, setNewListTask] = useState(''); // Нова задача
+    const [tasks, setTasks] = useState<string[]>([]); // Список задач
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-600 to-purple-600 p-6">
-            <div className="w-full max-w-lg bg-white rounded-xl shadow-lg p-6 space-y-4">
-                <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">Task Manager</h1>
-                <ListCreator
-                    title_task={titleTask}
-                    setTitleTask={setTitleTask}
-                    tasks={tasks}
-                    setTasks={setTasks}
-                />
-                <ListViewer
-                    tasks={tasks}
-                    setTasks={setTasks}
-                />
-            </div>
+        <div className="min-h-full flex flex-col items-center justify-center overflow-clip h-screen">
+            <ListCreator
+                lists={lists}
+                setLists={setLists}
+                listTitle={listTitle}
+                setListTitle={setListTitle}
+                newListTask={newListTask}
+                setNewListTask={setNewListTask}
+                tasks={tasks}
+                setTasks={setTasks}
+            />
+            <ListViewer lists={lists} setLists={setLists}/>
         </div>
     );
 }

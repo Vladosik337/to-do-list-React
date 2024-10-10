@@ -11,36 +11,40 @@ const ListViewer: React.FC<TaskInputProps> = ({ tasks, setTasks }) => {
         setTasks(e.target.value);
     };
 
-    const taskElements = tasks.map((task, index) => (
-        <div
-            key={index}
-            className="flex items-center justify-between bg-gray-800 rounded-lg p-4 shadow-md mb-2 w-full max-w-md"
-        >
-            <label className="flex items-center">
-                <input
-                    type="checkbox"
-                    className="mr-3 h-5 w-5 text-blue-500 border-gray-300 rounded focus:ring-blue-400"
-                />
-                <input
-                    type="text"
-                    id={`task-input-${index}`}
-                    placeholder="Ваше завдання"
-                    value={task}
-                    onChange={handleInputChange}
-                    className="bg-gray-800 text-white placeholder-gray-400 border-none outline-none"
-                />
-            </label>
-            <button
-                className="ml-3 text-sm text-white bg-red-600 py-1 px-3 rounded hover:bg-red-700 transition-colors duration-200"
-            >
-                Видалити
-            </button>
-        </div>
-    ));
+const ListViewer = ({lists}: ListViewerProps) => {
+    const [complite, setComplite] = useState(false);
+    const checkboxComplite = () => {
+        setComplite(!complite);
+    }
 
     return (
-        <div className="flex flex-col items-center">
-            {taskElements}
+        <div className="list mt-8 p-6 max-w-lg mx-auto bg-white rounded-lg shadow-lg">
+            <h3 className="text-center text-xl font-bold text-gray-700 mb-4">Списки</h3>
+            {lists.length === 0 ? (
+                <p className="text-center text-gray-500">Немає списків для відображення.</p>
+            ) : (
+                <ul className="space-y-4">
+                    {lists.map((list, index) => (
+                        <li key={index} className="border-b pb-4 mb-4">
+                            <h4 className="text-lg font-semibold">{list.title}</h4>
+                            <ul className="space-y-2">
+                                {list.tasks.map((task, taskIndex) => (
+                                    <li key={taskIndex}
+                                        className={`${complite ? 'line-through text-gray-400' : 'text-gray-700'}`}>
+                                        <input type="checkbox"
+                                               className="h-5 w-5 text-blue-500 focus:ring-blue-400 focus:ring-2 rounded"
+                                               onChange={checkboxComplite}/>
+                                        {task}
+                                        <button
+                                            className="text-red-500 hover:text-red-700 transition duration-200">Видалити
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 };
