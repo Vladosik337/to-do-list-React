@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './styles/style.scss';
 import ListCreator from "./components/ListCreator";
 import ListViewer from "./components/ListViewer";
@@ -6,6 +6,7 @@ import ListViewer from "./components/ListViewer";
 function App() {
     const [titleTask, setTitleTask] = useState('');
     const [tasks, setTasks] = useState<string[]>([]);
+    const [arrayObjects, setArrayObjects] = useState<{ id: string; title: string; isChecked: boolean }[]>([]);
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-600 to-purple-600 p-6">
@@ -16,10 +17,12 @@ function App() {
                     setTitleTask={setTitleTask}
                     tasks={tasks}
                     setTasks={setTasks}
+                    arrayObjects={arrayObjects}
+                    setArrayObjects={setArrayObjects}
                 />
                 <ListViewer
-                    tasks={tasks}
-                    setTasks={setTasks}
+                    arrayObjects={arrayObjects}
+                    setArrayObjects={setArrayObjects}
                 />
             </div>
         </div>
