@@ -10,7 +10,7 @@ interface ListViewerProps {
     setLists: React.Dispatch<React.SetStateAction<Task[]>>;
 }
 
-const ListViewer = ({ lists }: ListViewerProps) => {
+const ListViewer = ({lists}: ListViewerProps) => {
     const [complite, setComplite] = useState(false);
     const checkboxComplite = () => {
         setComplite(!complite);
@@ -28,12 +28,15 @@ const ListViewer = ({ lists }: ListViewerProps) => {
                             <h4 className="text-lg font-semibold">{list.title}</h4>
                             <ul className="space-y-2">
                                 {list.tasks.map((task, taskIndex) => (
-                                    <li key={taskIndex} className={`${complite ? 'line-through text-gray-400' : 'text-gray-700'}`}>
+                                    <li key={taskIndex}
+                                        className={`${complite ? 'line-through text-gray-400' : 'text-gray-700'}`}>
                                         <input type="checkbox"
                                                className="h-5 w-5 text-blue-500 focus:ring-blue-400 focus:ring-2 rounded"
                                                onChange={checkboxComplite}/>
                                         {task}
-                                        <button className="text-red-500 hover:text-red-700 transition duration-200">Видалити</button>
+                                        <button
+                                            className="text-red-500 hover:text-red-700 transition duration-200">Видалити
+                                        </button>
                                     </li>
                                 ))}
                             </ul>

@@ -14,7 +14,16 @@ interface ListCreatorProps {
     setTasks: (tasks: string[]) => void;
 }
 
-const ListCreator = ({lists, setLists, listTitle, setListTitle, newListTask, setNewListTask, tasks, setTasks}: ListCreatorProps) => {
+const ListCreator = ({
+                         lists,
+                         setLists,
+                         listTitle,
+                         setListTitle,
+                         newListTask,
+                         setNewListTask,
+                         tasks,
+                         setTasks
+                     }: ListCreatorProps) => {
     const addTask = () => {
         if (newListTask.trim() !== '') {
             setTasks([...tasks, newListTask]);
@@ -24,7 +33,7 @@ const ListCreator = ({lists, setLists, listTitle, setListTitle, newListTask, set
 
     const createList = () => {
         if (listTitle.trim() !== '' && tasks.length > 0) {
-            const newList = { title: listTitle, tasks };
+            const newList = {title: listTitle, tasks};
             setLists([...lists, newList]);
             console.log('Updated Lists:', [...lists, newList])
             setListTitle('');
@@ -79,12 +88,16 @@ const ListCreator = ({lists, setLists, listTitle, setListTitle, newListTask, set
                         value={newListTask}
                         onChange={(e) => setNewListTask(e.target.value)}
                     />
-                    <button className="ml-2 p-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition duration-200" onClick={addTask}>
+                    <button
+                        className="ml-2 p-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition duration-200"
+                        onClick={addTask}>
                         Додати завдання
                     </button>
                 </li>
             </ul>
-            <button className="mt-4 w-full p-2 text-white bg-amber-600 rounded-md hover:bg-amber-700 transition duration-200" onClick={createList}>
+            <button
+                className="mt-4 w-full p-2 text-white bg-amber-600 rounded-md hover:bg-amber-700 transition duration-200"
+                onClick={createList}>
                 Сторити нотатку для виконання
             </button>
         </div>

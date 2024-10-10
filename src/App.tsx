@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useState} from 'react';
 import './styles/style.scss';
 import ListCreator from "./components/ListCreator";
 import ListViewer from "./components/ListViewer";
@@ -26,7 +26,7 @@ function App() {
                 tasks={tasks}
                 setTasks={setTasks}
             />
-            <ListViewer lists={lists} setLists={setLists} />
+            <ListViewer lists={lists} setLists={setLists}/>
         </div>
     );
 }
