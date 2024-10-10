@@ -9,7 +9,7 @@ interface TaskInputProps {
 
 const ListCreator: React.FC<TaskInputProps> = ({ title_task, setTitleTask, tasks, setTasks }) => {
     const addTasks = () => {
-        if (title_task.trim()) {
+        if (title_task.trim() && title_task.length >= 5) {
             setTasks([...tasks, title_task]);
             setTitleTask('');
         } else {
@@ -27,7 +27,7 @@ const ListCreator: React.FC<TaskInputProps> = ({ title_task, setTitleTask, tasks
                 <input
                     type="text"
                     id="task-input"
-                    placeholder="Введите ваше задание"
+                    placeholder="Write your task"
                     value={title_task}
                     onChange={handleInputChange}
                     className="p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition duration-200 ease-in-out mb-3 w-full text-gray-700"
@@ -36,7 +36,7 @@ const ListCreator: React.FC<TaskInputProps> = ({ title_task, setTitleTask, tasks
                     className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 shadow-md transition duration-200 ease-in-out"
                     onClick={addTasks}
                 >
-                    Добавить задание
+                    Add Task
                 </button>
             </label>
         </div>
