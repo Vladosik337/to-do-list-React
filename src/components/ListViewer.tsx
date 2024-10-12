@@ -1,7 +1,10 @@
 import React from 'react';
 
 interface TaskViewerProps {
-    arrayObjects: { id: string; title: string; isChecked: boolean }[];
+    arrayObjects: {
+        id: string;
+        title: string;
+        isChecked: boolean }[];
     setArrayObjects: (arrayObjects: { id: string; title: string; isChecked: boolean }[]) => void;
 }
 

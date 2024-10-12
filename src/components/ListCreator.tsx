@@ -1,24 +1,20 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 interface TaskInputProps {
-    title_task: string;
-    setTitleTask: (title: string) => void;
-    tasks: string[];
-    setTasks: (tasks: string[]) => void;
     arrayObjects: { id: string; title: string; isChecked: boolean }[];
     setArrayObjects: (arrayObjects: { id: string; title: string; isChecked: boolean }[]) => void;
 }
 
-const ListCreator: React.FC<TaskInputProps> = ({ title_task, setTitleTask, tasks, setTasks, arrayObjects, setArrayObjects }) => {
+const ListCreator: React.FC<TaskInputProps> = ({arrayObjects, setArrayObjects }) => {
+    const [titleTask, setTitleTask] = useState('');
     const addTasks = () => {
-        if (title_task.trim() && title_task.length >= 5) {
-            setTasks([...tasks, title_task]);
+        if (titleTask.trim() && titleTask.length >= 5) {
             setTitleTask('');
 
             const newTask = {
                 id: uuidv4(),
-                title: title_task,
+                title: titleTask,
                 isChecked: false,
             };
             setArrayObjects([...arrayObjects, newTask]);
@@ -36,7 +32,7 @@ const ListCreator: React.FC<TaskInputProps> = ({ title_task, setTitleTask, tasks
             <input
                 type="text"
                 placeholder="Write your task"
-                value={title_task}
+                value={titleTask}
                 onChange={handleInputChange}
                 className="p-2 border border-gray-300 rounded-lg mb-3 w-full"
             />
