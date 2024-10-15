@@ -1,31 +1,17 @@
-import React, {useState} from 'react';
-import {v4 as uuidv4} from 'uuid';
+import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid'; // імпорт бібліотеки для генерації унікальних ID
 
-interface TaskInputProps {
-    arrayObjects: {
-        id: string;
-        title: string;
-        isChecked: boolean
-    }[];
-    setArrayObjects: (arrayObjects: {
-        id: string;
-        title: string;
-        isChecked: boolean
-    }[]) => void;
+interface CreateNoteTitelProps {
+    addNewNote: (title: string) => void; // Передача функції для додавання нової нотатки
 }
 
-const CreateNoteTitel: React.FC<TaskInputProps> = ({arrayObjects, setArrayObjects}) => {
+const CreateNoteTitel: React.FC<CreateNoteTitelProps> = ({ addNewNote }) => {
     const [titleTask, setTitleTask] = useState('');
-    const addTasks = () => {
-        if (titleTask.trim() && titleTask.length >= 5) {
-            setTitleTask('');
 
-            const newTask = {
-                id: uuidv4(),
-                title: titleTask,
-                isChecked: false,
-            };
-            setArrayObjects([...arrayObjects, newTask]);
+    const handleAddNote = () => {
+        if (titleTask.trim() && titleTask.length >= 5) {
+            addNewNote(titleTask); // Виклик функції для додавання нотатки
+            setTitleTask(''); // Очищення поля вводу
         } else {
             alert('Ошибка: задание пустое или содержит менее 5 символов');
         }
@@ -44,7 +30,7 @@ const CreateNoteTitel: React.FC<TaskInputProps> = ({arrayObjects, setArrayObject
                 onChange={handleInputChange}
                 className="p-2 border border-gray-300 rounded-lg mb-3 w-full"
             />
-            <button onClick={addTasks} className="bg-blue-500 text-white py-2 px-4 rounded-lg">
+            <button onClick={handleAddNote} className="bg-blue-500 text-white py-2 px-4 rounded-lg">
                 Add Note
             </button>
         </div>

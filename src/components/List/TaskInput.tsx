@@ -1,16 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface TaskInputProps {
-    taskTitle: string;
-    onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onAddTask: () => void;
+    onAddTask: (newTaskTitle: string) => void;
 }
 
-const TaskInput: React.FC<TaskInputProps> = ({ taskTitle, onInputChange, onAddTask }) => {
+const TaskInput: React.FC<TaskInputProps> = ({ onAddTask }) => {
+    const [taskTitle, setTaskTitle] = useState('');
+
+    const handleAdd = () => {
+        if (taskTitle.trim()) {
+            onAddTask(taskTitle);
+            setTaskTitle('');
+        }
+    };
+
     return (
         <label className="flex">
-            <input type="text" value={taskTitle} onChange={onInputChange} />
-            <button className="ml-[15px]" onClick={onAddTask}>Add</button>
+            <input
+                type="text"
+                value={taskTitle}
+                onChange={(e) => setTaskTitle(e.target.value)}
+                placeholder="Add new task"
+            />
+            <button className="ml-[15px]" onClick={handleAdd}>Add</button>
         </label>
     );
 };
