@@ -1,12 +1,20 @@
 import React, {useState} from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 interface TaskInputProps {
-    arrayObjects: { id: string; title: string; isChecked: boolean }[];
-    setArrayObjects: (arrayObjects: { id: string; title: string; isChecked: boolean }[]) => void;
+    arrayObjects: {
+        id: string;
+        title: string;
+        isChecked: boolean
+    }[];
+    setArrayObjects: (arrayObjects: {
+        id: string;
+        title: string;
+        isChecked: boolean
+    }[]) => void;
 }
 
-const ListCreator: React.FC<TaskInputProps> = ({arrayObjects, setArrayObjects }) => {
+const CreateNoteTitel: React.FC<TaskInputProps> = ({arrayObjects, setArrayObjects}) => {
     const [titleTask, setTitleTask] = useState('');
     const addTasks = () => {
         if (titleTask.trim() && titleTask.length >= 5) {
@@ -31,16 +39,16 @@ const ListCreator: React.FC<TaskInputProps> = ({arrayObjects, setArrayObjects })
         <div className="flex flex-col items-center mb-4 w-full max-w-md">
             <input
                 type="text"
-                placeholder="Write your task"
+                placeholder="Write the name of the list"
                 value={titleTask}
                 onChange={handleInputChange}
                 className="p-2 border border-gray-300 rounded-lg mb-3 w-full"
             />
             <button onClick={addTasks} className="bg-blue-500 text-white py-2 px-4 rounded-lg">
-                Add Task
+                Add Note
             </button>
         </div>
     );
 };
 
-export default ListCreator;
+export default CreateNoteTitel;
