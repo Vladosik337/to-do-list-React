@@ -1,5 +1,5 @@
 import React from 'react';
-import SubtaskInput from './SubtaskInput';
+import SubtaskInput from './SubtaskInput.tsx';
 import SubtaskItem from './SubtaskItem';
 
 interface TaskListViewerProps {
@@ -80,7 +80,11 @@ const TaskListViewer: React.FC<TaskListViewerProps> = ({ taskLists, setTaskLists
         >
           <label className="flex items-center mb-[15px]">{taskList.title}</label>
 
-          <SubtaskInput onAddSubtask={(newTaskTitle) => addSubtask(taskList.id, newTaskTitle)} />
+          <SubtaskInput
+            onAddSubtask={(newTaskTitle) => addSubtask(taskList.id, newTaskTitle)}
+            placeholder={'Add task'}
+            buttonText={'Add'}
+          />
 
           <ul className="mt-2 flex flex-col w-full gap-[10px]">
             {taskList.tasks.map((subtask) => (
