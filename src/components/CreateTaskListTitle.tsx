@@ -21,13 +21,13 @@ const CreateTaskListTitle: React.FC<CreateTaskListTitleProps> = ({ addTaskList }
   };
 
   return (
-    <div className="flex flex-col items-center mb-4 w-full max-w-md">
+    <div className="flex flex-col items-center mb-4 w-full">
       <input
         type="text"
         placeholder="Write the name of the list"
         value={taskListTitle}
         onChange={handleTitleInputChange}
-        className="p-2 border border-gray-300 rounded-lg mb-3 w-full"
+        className="p-2 border border-gray-300 rounded-lg mb-3 max-w-w-[300px]"
       />
       <button onClick={handleAddTaskList} className="bg-blue-500 text-white py-2 px-4 rounded-lg">
         Add Task List

@@ -72,7 +72,7 @@ const TaskListViewer: React.FC<TaskListViewerProps> = ({ taskLists, setTaskLists
   };
 
   return (
-    <div className="flex flex-col items-center mt-[15px]">
+    <div className="flex flex-row items-center justify-center mt-[15px] gap-5 flex-wrap">
       {taskLists.map((taskList) => (
         <div
           key={taskList.id}
