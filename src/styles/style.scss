@@ -2,18 +2,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import "reset";
+@import 'reset';
 
 // Import Fonts
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
-body{
+body {
   font-family: 'Open Sans';
   font-size: 16px;
   background-color: #3a3e4f;
 }
 
-[class*="__container"]{
+[class*='__container'] {
   max-width: 1180px;
   padding: 0 20px;
   margin: 0 auto;

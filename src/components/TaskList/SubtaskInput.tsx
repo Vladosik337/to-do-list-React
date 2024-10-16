@@ -1,27 +1,32 @@
 import React, { useState } from 'react';
 
-interface TaskInputProps {
-  onAddTask: (newTaskTitle: string) => void;
+interface SubtaskInputProps {
+  onAddSubtask: (newSubtaskTitle: string) => void;
 }
 
-const TaskInput: React.FC<TaskInputProps> = ({ onAddTask }) => {
-  const [taskTitle, setTaskTitle] = useState('');
+const SubtaskInput: React.FC<SubtaskInputProps> = ({ onAddSubtask }) => {
+  const [subtaskTitle, setSubtaskTitle] = useState('');
 
-  const handleAdd = () => {
-    if (taskTitle.trim()) {
-      onAddTask(taskTitle);
-      setTaskTitle('');
+  const handleAddSubtask = () => {
+    if (subtaskTitle.trim()) {
+      onAddSubtask(subtaskTitle);
+      setSubtaskTitle('');
     }
   };
 
   return (
     <label className="flex">
-      <input type="text" value={taskTitle} onChange={(e) => setTaskTitle(e.target.value)} placeholder="Add new task" />
-      <button className="ml-[15px]" onClick={handleAdd}>
+      <input
+        type="text"
+        value={subtaskTitle}
+        onChange={(e) => setSubtaskTitle(e.target.value)}
+        placeholder="Add new subtask"
+      />
+      <button className="ml-[15px]" onClick={handleAddSubtask}>
         Add
       </button>
     </label>
   );
 };
 
-export default TaskInput;
+export default SubtaskInput;

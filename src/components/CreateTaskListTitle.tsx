@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 
-interface CreateNoteTitelProps {
-  addNewNote: (title: string) => void;
+interface CreateTaskListTitleProps {
+  addTaskList: (title: string) => void;
 }
 
-const CreateNoteTitel: React.FC<CreateNoteTitelProps> = ({ addNewNote }) => {
-  const [titleTask, setTitleTask] = useState('');
+const CreateTaskListTitle: React.FC<CreateTaskListTitleProps> = ({ addTaskList }) => {
+  const [taskListTitle, setTaskListTitle] = useState('');
 
-  const handleAddNote = () => {
-    if (titleTask.trim() && titleTask.length >= 5) {
-      addNewNote(titleTask); // Виклик функції для додавання нотатки
-      setTitleTask(''); // Очищення поля вводу
+  const handleAddTaskList = () => {
+    if (taskListTitle.trim() && taskListTitle.length >= 5) {
+      addTaskList(taskListTitle);
+      setTaskListTitle('');
     } else {
       alert('Ошибка: задание пустое или содержит менее 5 символов');
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitleTask(e.target.value);
+  const handleTitleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTaskListTitle(e.target.value);
   };
 
   return (
@@ -25,15 +25,15 @@ const CreateNoteTitel: React.FC<CreateNoteTitelProps> = ({ addNewNote }) => {
       <input
         type="text"
         placeholder="Write the name of the list"
-        value={titleTask}
-        onChange={handleInputChange}
+        value={taskListTitle}
+        onChange={handleTitleInputChange}
         className="p-2 border border-gray-300 rounded-lg mb-3 w-full"
       />
-      <button onClick={handleAddNote} className="bg-blue-500 text-white py-2 px-4 rounded-lg">
-        Add Note
+      <button onClick={handleAddTaskList} className="bg-blue-500 text-white py-2 px-4 rounded-lg">
+        Add Task List
       </button>
     </div>
   );
 };
 
-export default CreateNoteTitel;
+export default CreateTaskListTitle;
