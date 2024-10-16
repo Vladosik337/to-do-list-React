@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './styles/style.scss';
 import TaskListContainer from './components/TaskList/TaskListContainer';
 import AddItemInput from './components/TaskList/AddItemInput';
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
   // Определение типов данных для задач и списков задач
@@ -24,12 +25,13 @@ function App() {
   // Функция для добавления нового списка задач
   const addTaskList = (listTitle: string) => {
     const newTaskList: TaskList = {
-      id: `tasklist-${Date.now()}`,
+      id: `tasklist-${uuidv4()}`,
       title: listTitle,
       isCompleted: false,
       tasks: [],
     };
     setTaskLists([newTaskList, ...taskLists]);
+    console.log(taskLists);
   };
 
   // Функция для добавления задачи в определенный список задач
@@ -39,7 +41,7 @@ function App() {
         taskList.id === listId
           ? {
               ...taskList,
-              tasks: [{ id: `task-${Date.now()}`, title: taskTitle, isCompleted: false }, ...taskList.tasks],
+              tasks: [{ id: `task-${uuidv4()}`, title: taskTitle, isCompleted: false }, ...taskList.tasks],
             }
           : taskList,
       ),
