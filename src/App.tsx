@@ -3,22 +3,9 @@ import './styles/style.scss';
 import TaskListContainer from './components/TaskList/TaskListContainer';
 import AddItemInput from './components/TaskList/AddItemInput';
 import { v4 as uuidv4 } from 'uuid';
+import { TaskList } from './Types.ts';
 
 function App() {
-  // Определение типов данных для задач и списков задач
-  type Task = {
-    id: string;
-    title: string;
-    isCompleted: boolean;
-  };
-
-  type TaskList = {
-    id: string;
-    title: string;
-    isCompleted: boolean;
-    tasks: Task[];
-  };
-
   // Использование состояния для хранения списка задач
   const [taskLists, setTaskLists] = useState<TaskList[]>([]);
 
