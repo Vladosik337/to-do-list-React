@@ -36,7 +36,7 @@ function App() {
   };
 
   // Функция для изменения названия задачи
-  const editTaskTitle = (listId: string, taskId: string, newTitle: string) => {
+  const editTaskName = (listId: string, taskId: string, newTitle: string) => {
     setTaskLists(
       taskLists.map((taskList) =>
         taskList.id === listId
@@ -44,6 +44,17 @@ function App() {
               ...taskList,
               tasks: taskList.tasks.map((task) => (task.id === taskId ? { ...task, title: newTitle } : task)),
             }
+          : taskList,
+      ),
+    );
+  };
+
+  // Функция для изменения названия списка
+  const updateTaskTitle = (listId: string, taskId: string, newTitle: string) => {
+    setTaskLists((prevTaskLists) =>
+      prevTaskLists.map((taskList) =>
+        taskList.id === listId
+          ? { ...taskList, title: newTitle } // Оновлюємо заголовок списку
           : taskList,
       ),
     );
@@ -84,7 +95,8 @@ function App() {
           addTask={addTaskToList}
           deleteTask={removeTaskFromList}
           toggleTaskCompletion={toggleTaskCompletion}
-          updateTaskTitle={editTaskTitle}
+          editTaskName={editTaskName}
+          updateTaskTitle={updateTaskTitle}
         />
       </div>
     </div>
