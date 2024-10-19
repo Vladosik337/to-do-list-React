@@ -6,8 +6,26 @@ import { v4 as uuidv4 } from 'uuid';
 import { TaskList } from './Types.ts';
 
 function App() {
-  // Использование состояния для хранения списка задач
-  const [taskLists, setTaskLists] = useState<TaskList[]>([]);
+  // Инициализация состояния с одним списком задач и одной задачей
+  const [taskLists, setTaskLists] = useState<TaskList[]>([
+    {
+      id: `tasklist-${uuidv4()}`,
+      title: 'My First Task List',
+      isCompleted: false,
+      tasks: [
+        {
+          id: `task-${uuidv4()}`,
+          title: 'Sample Task',
+          isCompleted: false,
+        },
+        {
+          id: `task-${uuidv4()}`,
+          title: 'Sample Task',
+          isCompleted: true,
+        },
+      ],
+    },
+  ]);
 
   // Функция для добавления нового списка задач
   const addTaskList = (listTitle: string) => {
