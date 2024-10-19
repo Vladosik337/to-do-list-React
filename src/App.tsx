@@ -15,12 +15,12 @@ function App() {
       tasks: [
         {
           id: `task-${uuidv4()}`,
-          title: 'Sample Task',
+          title: 'Sample Task 1',
           isCompleted: false,
         },
         {
           id: `task-${uuidv4()}`,
-          title: 'Sample Task',
+          title: 'Sample Task 2',
           isCompleted: true,
         },
       ],
@@ -36,7 +36,6 @@ function App() {
       tasks: [],
     };
     setTaskLists([newTaskList, ...taskLists]);
-    console.log(taskLists);
   };
 
   // Функция для добавления задачи в определенный список задач
@@ -68,13 +67,9 @@ function App() {
   };
 
   // Функция для изменения названия списка
-  const updateTaskTitle = (listId: string, taskId: string, newTitle: string) => {
+  const updateTaskTitle = (listId: string, newTitle: string) => {
     setTaskLists((prevTaskLists) =>
-      prevTaskLists.map((taskList) =>
-        taskList.id === listId
-          ? { ...taskList, title: newTitle } // Оновлюємо заголовок списку
-          : taskList,
-      ),
+      prevTaskLists.map((taskList) => (taskList.id === listId ? { ...taskList, title: newTitle } : taskList)),
     );
   };
 
@@ -85,6 +80,11 @@ function App() {
         taskList.id === listId ? { ...taskList, tasks: taskList.tasks.filter((task) => task.id !== taskId) } : taskList,
       ),
     );
+  };
+
+  // Функция для удаления списка задач
+  const removeTaskList = (listId: string) => {
+    setTaskLists(taskLists.filter((taskList) => taskList.id !== listId));
   };
 
   // Функция для переключения состояния выполнения задачи
@@ -112,6 +112,7 @@ function App() {
           taskLists={taskLists}
           addTask={addTaskToList}
           deleteTask={removeTaskFromList}
+          deleteTaskList={removeTaskList}
           toggleTaskCompletion={toggleTaskCompletion}
           editTaskName={editTaskName}
           updateTaskTitle={updateTaskTitle}
