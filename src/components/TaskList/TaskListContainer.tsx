@@ -1,31 +1,48 @@
 import React from 'react';
 import AddItemInput from './AddItemInput.tsx';
 import TaskItem from './TaskItem.tsx';
+import { useSelector, useDispatch } from 'react-redux';
+import {AppDispatch} from "../../redux/store.ts";
+import {
+  addTaskToList, editTaskName,
+  removeTaskFromList,
+  removeTaskList,
+  toggleTaskCompletion, updateTaskTitle
+} from "../../features/taskListsSlice.ts";
 
-interface TaskListContainerProps {
-  taskLists: {
-    id: string;
-    title: string;
-    isCompleted: boolean;
-    tasks: { id: string; title: string; isCompleted: boolean }[];
-  }[];
-  addTask: (listId: string, taskTitle: string) => void;
-  deleteTask: (listId: string, taskId: string) => void;
-  deleteTaskList: (listId: string) => void;
-  toggleTaskCompletion: (listId: string, taskId: string) => void;
-  editTaskName: (listId: string, taskId: string, newTitle: string) => void;
-  updateTaskTitle: (listId: string, newTitle: string) => void;
-}
+const TaskListContainer: React.FC= ({taskLists}) => {
+  const dispatch: AppDispatch = useDispatch(); // Використовуємо useDispatch для виклику дій Redux
 
-const TaskListContainer: React.FC<TaskListContainerProps> = ({
-  taskLists,
-  addTask,
-  deleteTask,
-  toggleTaskCompletion,
-  editTaskName,
-  updateTaskTitle,
-  deleteTaskList,
-}) => {
+  // Функция для добавления задачи в определенный список задач
+  const handleAddTaskToList = (listId: string, taskTitle: string) => {
+    dispatch(addTaskToList( { listId, taskTitle}));
+  }
+
+  // Функция для удаления задачи из списка
+  const handleRemoveTaskFromList = (listId: string, taskId: string) => {
+    dispatch(removeTaskFromList({listId, taskId}))
+  };
+
+  // Функция для удаления списка задач
+  const handleRemoveTaskList = (listId: string) => {
+    dispatch(removeTaskList({listId}))
+  };
+
+  // Функция для переключения состояния выполнения задачи\
+  const handleToggleTaskCompletion = (listId: string, taskId: string) => {
+    dispatch(toggleTaskCompletion({listId, taskId}))
+  };
+
+  // Функция для изменения названия задачи
+  const handleEditTaskListTitle = (listId: string, taskId: string, newTitle: string) => {
+    dispatch(editTaskName({ listId, taskId, newTitle, })); // Ви можете реалізувати цю логіку у вашому слайсі
+  };
+
+  // Функция для изменения названия списка
+  const handleUpdateTaskTitle = (listId: string, newTitle: string) => {
+    dispatch(updateTaskTitle({listId, newTitle}))
+  };
+
   return (
     <div className="flex flex-row items-center justify-center mt-4 gap-5 flex-wrap">
       {taskLists.map((taskList) => (
@@ -38,19 +55,19 @@ const TaskListContainer: React.FC<TaskListContainerProps> = ({
               type="text"
               value={taskList.title}
               onChange={(e) => {
-                updateTaskTitle(taskList.id, e.target.value);
+                handleUpdateTaskTitle(taskList.id, e.target.value);
               }}
               className="w-full p-2 mb-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
               placeholder="Title task list"
             />
             <button
-              onClick={() => deleteTaskList(taskList.id)}
+              onClick={() => handleRemoveTaskList(taskList.id)}
               className="ml-3 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition-colors duration-200"
             >
               Delete List
             </button>
           </div>
-          <AddItemInput onAddItem={(title) => addTask(taskList.id, title)} placeholder="Add Task" buttonText="Add" />
+          <AddItemInput onAddItem={(title) => handleAddTaskToList(taskList.id, title)} placeholder="Add Task" buttonText="Add" />
           <ul className="mt-2 w-full space-y-2">
             {taskList.tasks.map((task) => (
               <TaskItem
@@ -58,9 +75,9 @@ const TaskListContainer: React.FC<TaskListContainerProps> = ({
                 id={task.id}
                 title={task.title}
                 isCompleted={task.isCompleted}
-                onToggleCompletion={() => toggleTaskCompletion(taskList.id, task.id)}
-                onDelete={() => deleteTask(taskList.id, task.id)}
-                onUpdateTitle={(newTitle) => editTaskName(taskList.id, task.id, newTitle)}
+                onToggleCompletion={() => handleToggleTaskCompletion(taskList.id, task.id)}
+                onDelete={() => handleRemoveTaskFromList(taskList.id, task.id)}
+                onUpdateTitle={(newTitle) => handleEditTaskListTitle(taskList.id, task.id, newTitle)}
               />
             ))}
           </ul>

@@ -1,4 +1,3 @@
-// Определение типов данных для задач и списков задач
 export type Task = {
   id: string;
   title: string;
