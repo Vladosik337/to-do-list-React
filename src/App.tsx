@@ -2,63 +2,25 @@ import React from 'react';
 import './styles/style.scss';
 import TaskListContainer from './components/TaskList/TaskListContainer';
 import AddItemInput from './components/TaskList/AddItemInput';
-import { v4 as uuidv4 } from 'uuid';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from './redux/store';
-import { addTaskList } from './features/taskListsSlice.ts';
+import { addTaskList, addTaskToList } from './features/taskListsSlice.ts';
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
-  const dispatch: AppDispatch = useDispatch();
-  const taskLists = useSelector((state: RootState) => state.taskLists.taskLists);
+    const dispatch: AppDispatch = useDispatch(); // Використовуємо useDispatch для виклику дій Redux
+    const taskLists = useSelector((state: RootState) => state.taskLists.taskLists); // Отримуємо списки завдань зі стану Redux за допомогою useSelector
 
-  // Инициализация состояния с одним списком задач и одной задачей
-  // const [taskLists, setTaskLists] = useState<TaskList[]>([
-  //   {
-  //     id: `tasklist-${uuidv4()}`,
-  //     title: 'My First Task List',
-  //     isCompleted: false,
-  //     tasks: [
-  //       {
-  //         id: `task-${uuidv4()}`,
-  //         title: 'Sample Task 1',
-  //         isCompleted: false,
-  //       },
-  //       {
-  //         id: `task-${uuidv4()}`,
-  //         title: 'Sample Task 2',
-  //         isCompleted: true,
-  //       },
-  //     ],
-  //   },
-  // ]);
-  const handleAddTaskList = (title: string) => {
-    dispatch(addTaskList({ isCompleted: false, id: `tasklist-${uuidv4()}`, title, tasks: [] }));
-  };
-
-  // Функция для добавления нового списка задач
-  // const addTaskList = (listTitle: string) => {
-  //   const newTaskList: TaskList = {
-  //     id: `tasklist-${uuidv4()}`,
-  //     title: listTitle,
-  //     isCompleted: false,
-  //     tasks: [],
-  //   };
-  //   setTaskLists([newTaskList, ...taskLists]);
-  // };
+    // Функція для додавання нового списку завдань
+    const handleAddTaskList = (title: string) => {
+        dispatch(addTaskList({ isCompleted: false, id: `tasklist-${uuidv4()}`, title, tasks: [] }));
+    };
 
   // Функция для добавления задачи в определенный список задач
-  const addTaskToList = (listId: string, taskTitle: string) => {
-    setTaskLists(
-      taskLists.map((taskList) =>
-        taskList.id === listId
-          ? {
-              ...taskList,
-              tasks: [{ id: `task-${uuidv4()}`, title: taskTitle, isCompleted: false }, ...taskList.tasks],
-            }
-          : taskList,
-      ),
-    );
-  };
+    const handleAddTaskToList = (listId: string, taskTitle: string) => {
+        dispatch(addTaskToList( { listId, taskTitle}));
+    }
+
 
   // Функция для изменения названия задачи
   const editTaskName = (listId: string, taskId: string, newTitle: string) => {
@@ -118,7 +80,7 @@ function App() {
         <AddItemInput onAddItem={handleAddTaskList} placeholder="Add Task List" buttonText="Add" />
         <TaskListContainer
           taskLists={taskLists}
-          addTask={addTaskToList}
+          addTask={handleAddTaskToList}
           deleteTask={removeTaskFromList}
           deleteTaskList={removeTaskList}
           toggleTaskCompletion={toggleTaskCompletion}
