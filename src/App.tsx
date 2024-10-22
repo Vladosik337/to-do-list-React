@@ -4,7 +4,7 @@ import TaskListContainer from './components/TaskList/TaskListContainer';
 import AddItemInput from './components/TaskList/AddItemInput';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from './redux/store';
-import { addTaskList, addTaskToList, editTaskName, removeTaskFromList } from './features/taskListsSlice.ts';
+import { addTaskList, addTaskToList, editTaskName, removeTaskFromList, removeTaskList } from './features/taskListsSlice.ts';
 import { v4 as uuidv4 } from 'uuid';
 
 function App() {
@@ -41,8 +41,9 @@ function App() {
   };
 
   // Функция для удаления списка задач
-  const removeTaskList = (listId: string) => {
-    setTaskLists(taskLists.filter((taskList) => taskList.id !== listId));
+  const handleRemoveTaskList = (listId: string) => {
+    dispatch(removeTaskList({listId}))
+      console.log('delete')
   };
 
   // Функция для переключения состояния выполнения задачи
@@ -70,7 +71,7 @@ function App() {
           taskLists={taskLists}
           addTask={handleAddTaskToList}
           deleteTask={handleRemoveTaskFromList}
-          deleteTaskList={removeTaskList}
+          deleteTaskList={handleRemoveTaskList}
           toggleTaskCompletion={toggleTaskCompletion}
           editTaskName={handleEditTaskListTitle}
           updateTaskTitle={handleEditTaskListTitle}

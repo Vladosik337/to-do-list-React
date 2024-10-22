@@ -3,6 +3,8 @@ import { TaskList } from '../Types';
 import { v4 as uuidv4 } from 'uuid';
 import store from "../redux/store.ts";
 import {list} from "postcss";
+import {Simulate} from "react-dom/test-utils";
+import stalled = Simulate.stalled;
 
 interface TaskListState {
     taskLists: TaskList[]; // Інтерфейс стану списку завдань (масив списків завдань)
@@ -51,9 +53,16 @@ const taskListsSlice = createSlice({
             if (taskList){
                 taskList.tasks = taskList.tasks.filter((task) => task.id !== action.payload.taskId)
             }
-        }
+        },
+        // Функция для удаления списка задач
+        removeTaskList: (state, action: PayloadAction<{listId: string}>) => {
+            state.taskLists = state.taskLists.filter((taskList) => taskList.id !== action.payload.listId)
+        },
     },
 });
 
-export const { addTaskList, addTaskToList, editTaskName, removeTaskFromList } = taskListsSlice.actions;
+
+
+
+export const { addTaskList, addTaskToList, editTaskName, removeTaskFromList, removeTaskList } = taskListsSlice.actions;
 export default taskListsSlice.reducer;
