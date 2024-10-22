@@ -44,8 +44,16 @@ const taskListsSlice = createSlice({
                 }
             }
         },
+        // Ред'юсер для видалення задачи з списка
+        removeTaskFromList: (state, action: PayloadAction<{listId: string, taskId: string}>) =>{
+            const taskList = state.taskLists.find((list)=> list.id === action.payload.listId);
+
+            if (taskList){
+                taskList.tasks = taskList.tasks.filter((task) => task.id !== action.payload.taskId)
+            }
+        }
     },
 });
 
-export const { addTaskList, addTaskToList, editTaskName } = taskListsSlice.actions;
+export const { addTaskList, addTaskToList, editTaskName, removeTaskFromList } = taskListsSlice.actions;
 export default taskListsSlice.reducer;

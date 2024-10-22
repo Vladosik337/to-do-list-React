@@ -4,7 +4,7 @@ import TaskListContainer from './components/TaskList/TaskListContainer';
 import AddItemInput from './components/TaskList/AddItemInput';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from './redux/store';
-import { addTaskList, addTaskToList, editTaskName } from './features/taskListsSlice.ts';
+import { addTaskList, addTaskToList, editTaskName, removeTaskFromList } from './features/taskListsSlice.ts';
 import { v4 as uuidv4 } from 'uuid';
 
 function App() {
@@ -36,12 +36,8 @@ function App() {
   };
 
   // Функция для удаления задачи из списка
-  const removeTaskFromList = (listId: string, taskId: string) => {
-    setTaskLists(
-      taskLists.map((taskList) =>
-        taskList.id === listId ? { ...taskList, tasks: taskList.tasks.filter((task) => task.id !== taskId) } : taskList,
-      ),
-    );
+  const handleRemoveTaskFromList = (listId: string, taskId: string) => {
+      dispatch(removeTaskFromList({listId, taskId}))
   };
 
   // Функция для удаления списка задач
@@ -73,7 +69,7 @@ function App() {
         <TaskListContainer
           taskLists={taskLists}
           addTask={handleAddTaskToList}
-          deleteTask={removeTaskFromList}
+          deleteTask={handleRemoveTaskFromList}
           deleteTaskList={removeTaskList}
           toggleTaskCompletion={toggleTaskCompletion}
           editTaskName={handleEditTaskListTitle}
