@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TaskList } from '../Types';
 import { v4 as uuidv4 } from 'uuid';
+import store from "../redux/store.ts";
+import {list} from "postcss";
 
 interface TaskListState {
     taskLists: TaskList[]; // Інтерфейс стану списку завдань (масив списків завдань)
@@ -32,10 +34,18 @@ const taskListsSlice = createSlice({
                 });
             }
         },
-        // Інші ред'юсери для видалення, оновлення і зміни задач можуть бути додані тут
+        // Ред'юсер для зміни назви задачи
+        editTaskName: (state, action: PayloadAction<{listId: string, taskId: string, newTitle: string}>) => {
+            const taskList = state.taskLists.find((list) => list.id === action.payload.listId);
+            if (taskList){
+                const task = taskList.tasks.find((task) => task.id === action.payload.taskId);
+                if (task){
+                    task.title = action.payload.newTitle; // змінює назву задачі
+                }
+            }
+        },
     },
 });
 
-
-export const { addTaskList, addTaskToList } = taskListsSlice.actions;
+export const { addTaskList, addTaskToList, editTaskName } = taskListsSlice.actions;
 export default taskListsSlice.reducer;

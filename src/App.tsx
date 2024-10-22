@@ -4,7 +4,7 @@ import TaskListContainer from './components/TaskList/TaskListContainer';
 import AddItemInput from './components/TaskList/AddItemInput';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from './redux/store';
-import { addTaskList, addTaskToList } from './features/taskListsSlice.ts';
+import { addTaskList, addTaskToList, editTaskName } from './features/taskListsSlice.ts';
 import { v4 as uuidv4 } from 'uuid';
 
 function App() {
@@ -23,18 +23,10 @@ function App() {
 
 
   // Функция для изменения названия задачи
-  const editTaskName = (listId: string, taskId: string, newTitle: string) => {
-    setTaskLists(
-      taskLists.map((taskList) =>
-        taskList.id === listId
-          ? {
-              ...taskList,
-              tasks: taskList.tasks.map((task) => (task.id === taskId ? { ...task, title: newTitle } : task)),
-            }
-          : taskList,
-      ),
-    );
-  };
+    const handleEditTaskListTitle = (listId: string, newTitle: string) => {
+        dispatch(editTaskName({ listId, taskId: "", newTitle })); // Ви можете реалізувати цю логіку у вашому слайсі
+    };
+
 
   // Функция для изменения названия списка
   const updateTaskTitle = (listId: string, newTitle: string) => {
@@ -84,8 +76,8 @@ function App() {
           deleteTask={removeTaskFromList}
           deleteTaskList={removeTaskList}
           toggleTaskCompletion={toggleTaskCompletion}
-          editTaskName={editTaskName}
-          updateTaskTitle={updateTaskTitle}
+          editTaskName={handleEditTaskListTitle}
+          updateTaskTitle={handleEditTaskListTitle}
         />
       </div>
     </div>
