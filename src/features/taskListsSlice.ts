@@ -42,7 +42,7 @@ const taskListsSlice = createSlice({
             if (taskList){
                 const task = taskList.tasks.find((task) => task.id === action.payload.taskId);
                 if (task){
-                    task.title = action.payload.newTitle; // змінює назву задачі
+                    task.title = action.payload.newTitle;
                 }
             }
         },
@@ -54,15 +54,31 @@ const taskListsSlice = createSlice({
                 taskList.tasks = taskList.tasks.filter((task) => task.id !== action.payload.taskId)
             }
         },
-        // Функция для удаления списка задач
+        // Ред'юсер для удаления списка задач
         removeTaskList: (state, action: PayloadAction<{listId: string}>) => {
             state.taskLists = state.taskLists.filter((taskList) => taskList.id !== action.payload.listId)
+        },
+        // Ред'юсер для изменения названия списка
+        updateTaskTitle: (state, action: PayloadAction<{listId: string, newTitle: string}>) => {
+            const taskList = state.taskLists.find((list) => list.id === action.payload.listId)
+            if (taskList){
+                taskList.title = action.payload.newTitle
+            }
+        },
+        // Ред'юсер для переключения состояния выполнения задачи
+        toggleTaskCompletion: (state, action: PayloadAction<{listId: string, taskId: string}>) => {
+            const taskList = state.taskLists.find((list) => list.id === action.payload.listId)
+            if (taskList) {
+                const task = taskList.tasks.find((task) => task.id === action.payload.taskId)
+                if (task){
+                    task.isCompleted = !task.isCompleted
+                }
+            }
         },
     },
 });
 
 
-
-
-export const { addTaskList, addTaskToList, editTaskName, removeTaskFromList, removeTaskList } = taskListsSlice.actions;
+export const { addTaskList, addTaskToList, editTaskName, removeTaskFromList, removeTaskList, updateTaskTitle, toggleTaskCompletion } = taskListsSlice.actions;
 export default taskListsSlice.reducer;
+
