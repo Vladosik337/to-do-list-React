@@ -6,7 +6,7 @@ interface AddItemInput {
   buttonText: string;
 }
 
-const InputWithButton: React.FC<AddItemInput> = ({ onAddItem, placeholder, buttonText }) => {
+const AddItemInput: React.FC<AddItemInput> = ({ onAddItem, placeholder, buttonText }) => {
   const [inputTitle, setInputTitle] = useState('');
 
   const handleAddItem = () => {
@@ -54,4 +54,4 @@ const InputWithButton: React.FC<AddItemInput> = ({ onAddItem, placeholder, butto
   );
 };
 
-export default InputWithButton;
+export default AddItemInput;

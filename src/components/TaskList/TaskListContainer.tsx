@@ -1,7 +1,7 @@
 import React from 'react';
 import AddItemInput from './AddItemInput.tsx';
 import TaskItem from './TaskItem.tsx';
-import { useSelector, useDispatch } from 'react-redux';
+import {useDispatch } from 'react-redux';
 import {AppDispatch} from "../../redux/store.ts";
 import {
   addTaskToList, editTaskName,

@@ -1,12 +1,24 @@
 import React from 'react';
-import InputWithButtonProps from './TaskList/AddItemInput.tsx';
+import AddItemInput from './TaskList/AddItemInput.tsx';
+import {AppDispatch, RootState} from "../redux/store.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {v4 as uuidv4} from "uuid";
+import {addTaskList} from "../features/taskListsSlice.ts";
 
-interface CreateTaskListTitleProps {
-  addTaskList: (title: string) => void;
-}
+const CreateTaskListTitle: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
 
-const CreateTaskListTitle: React.FC<CreateTaskListTitleProps> = ({ addTaskList }) => {
-  return <InputWithButtonProps onAddSubtask={addTaskList} placeholder={'Add name list'} buttonText={'Add'} />;
+  const handleAddTaskList = (title: string) => {
+    dispatch(addTaskList({ isCompleted: false, id: `tasklist-${uuidv4()}`, title, tasks: [] }));
+  };
+
+  return (
+      <AddItemInput
+          onAddItem={handleAddTaskList}
+          placeholder={'Add name list'}
+          buttonText={'Add'}
+      />
+  );
 };
 
 export default CreateTaskListTitle;
