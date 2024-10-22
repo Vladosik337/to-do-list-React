@@ -836,7 +836,7 @@ var require_react_development = __commonJS({
             // some renderers as primary and others as secondary. We only expect
             // there to be two concurrent renderers at most: React Native (primary) and
             // Fabric (secondary); React DOM (primary) and React ART (secondary).
-            // Secondary renderers store their context values on separate fields.
+            // Secondary renderers redux their context values on separate fields.
             _currentValue: defaultValue,
             _currentValue2: defaultValue,
             // Used to track how many concurrent renderers this context currently
@@ -989,7 +989,7 @@ var require_react_development = __commonJS({
         }
         function lazy(ctor) {
           var payload = {
-            // We use these fields to store the result.
+            // We use these fields to redux the result.
             _status: Uninitialized,
             _result: ctor,
           };
