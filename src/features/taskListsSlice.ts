@@ -14,14 +14,14 @@ interface TaskListState {
 const initialState = <TaskListState>{
     taskLists: [
         {
-            id: uuidv4(),
+            id: `taskList-${uuidv4()}`,
             title: 'Init list',
             tasks: [
-                {id: uuidv4(), title: 'Init task 1', isCompleted: false, priority: 'low'},
-                {id: uuidv4(), title: 'Init task 2', isCompleted: false, priority: 'high'},
-                {id: uuidv4(), title: 'Init task 3', isCompleted: true, priority: 'medium'},
-                {id: uuidv4(), title: 'Init task 4', isCompleted: false, priority: 'low'},
-                {id: uuidv4(), title: 'Init task 5', isCompleted: true, priority: 'low'},
+                {id: `task-${uuidv4()}`, title: 'Init task 1', isCompleted: false, priority: 'low'},
+                {id: `task-${uuidv4()}`, title: 'Init task 2', isCompleted: false, priority: 'high'},
+                {id: `task-${uuidv4()}`, title: 'Init task 3', isCompleted: true, priority: 'medium'},
+                {id: `task-${uuidv4()}`, title: 'Init task 4', isCompleted: false, priority: 'low'},
+                {id: `task-${uuidv4()}`, title: 'Init task 5', isCompleted: true, priority: 'low'},
             ],
             filteredTasks: [],
         }
@@ -112,12 +112,17 @@ const taskListsSlice = createSlice({
             if (taskList) {
                 if (action.payload.valuePriority === 'All') {
                     // Якщо "All", повертаємо всі задачі
+                    console.log('-------------All--------------')
                     taskList.filteredTasks = [...taskList.tasks];
-                    console.log(taskList.filteredTasks = [...taskList.tasks])
+                    console.log(taskList.filteredTasks)
+                    console.log('-------------All-END-------------')
                 } else {
                     // Фільтруємо задачі за пріоритетом
+                    console.log('-------------Filter--------------')
                     taskList.filteredTasks = taskList.tasks.filter((task) => task.priority === action.payload.valuePriority);
                     console.log(taskList.filteredTasks)
+                    console.log('-------------Filter-END-------------')
+
                 }
             }
         }
