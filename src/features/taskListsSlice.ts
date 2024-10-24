@@ -35,19 +35,18 @@ const taskListsSlice = createSlice({
     reducers: {
         // Ред'юсер для додавання нового списку завдань
         addTaskList: (state, action: PayloadAction<TaskList>) => {
-            // Додаємо новий список завдань на початок масиву taskLists
-            state.taskLists.unshift(action.payload);
+            state.taskLists = [action.payload, ...state.taskLists];
         },
         // Ред'юсер для додавання нової задачі до певного списку
         addTaskToList: (state, action: PayloadAction<{ listId: string; taskTitle: string }>) => {
             const taskList = state.taskLists.find((list) => list.id === action.payload.listId);
             if (taskList) {
-                taskList.tasks.unshift({
+                taskList.tasks = [{
                     id: `task-${uuidv4()}`,
                     title: action.payload.taskTitle,
                     isCompleted: false,
                     priority: 'med'
-                });
+                }, ...taskList.tasks];
             }
         },
         // Ред'юсер для зміни назви задачи
@@ -63,11 +62,11 @@ const taskListsSlice = createSlice({
         // Ред'юсер для видалення задачи з списка
         removeTaskFromList: (state, action: PayloadAction<{ listId: string, taskId: string }>) => {
             const taskList = state.taskLists.find((list) => list.id === action.payload.listId);
-
             if (taskList) {
                 taskList.tasks = taskList.tasks.filter((task) => task.id !== action.payload.taskId)
             }
         },
+
         // Ред'юсер для удаления списка задач
         removeTaskList: (state, action: PayloadAction<{ listId: string }>) => {
             state.taskLists = state.taskLists.filter((taskList) => taskList.id !== action.payload.listId)
