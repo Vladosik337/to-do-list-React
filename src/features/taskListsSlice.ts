@@ -20,13 +20,14 @@ const initialState = <TaskListState>{
                 {id: uuidv4(), title: 'Init task 1', isCompleted: false, priority: 'low'},
                 {id: uuidv4(), title: 'Init task 2', isCompleted: false, priority: 'high'},
                 {id: uuidv4(), title: 'Init task 3', isCompleted: true, priority: 'medium'},
+                {id: uuidv4(), title: 'Init task 4', isCompleted: false, priority: 'low'},
+                {id: uuidv4(), title: 'Init task 5', isCompleted: true, priority: 'low'},
             ],
+            filteredTasks: [],
         }
     ],
 };
 
-
-const filterTask: [] = []
 // Створення слайсу taskLists з двома ред'юсерами: додавання списку задач і додавання задачі до списку
 const taskListsSlice = createSlice({
     name: 'taskLists',
@@ -105,34 +106,21 @@ const taskListsSlice = createSlice({
         // Ред'юсер для фільтру приорітету завдань
         filterTaskPriority: (state, action: PayloadAction<{
             listId: string,
-            taskIds: string[], // Змінюємо на масив
             valuePriority: string
         }>) => {
             const taskList = state.taskLists.find((list) => list.id === action.payload.listId);
             if (taskList) {
-                if (Array.isArray(action.payload.taskIds)) {
-                    action.payload.taskIds.forEach((taskId) => {
-                        const task = taskList.tasks.find((task) => task.id === taskId);
-                        if (task) {
-                            if (action.payload.valuePriority === 'low') {
-                                console.log('action = Low')
-                                console.log(taskList)
-                                task.filter((task) => task.id.action.payload.valuePriority === 'low')
-                                console.log(task.filter((task) => task.id.action.payload.valuePriority === 'low'))
-
-                            } else if (action.payload.valuePriority === 'medium') {
-                                console.log('action = Medium')
-                            } else if (action.payload.valuePriority === 'high') {
-                                console.log('action = High')
-                            } else {
-                                console.log('action = All')
-                            }
-                        }
-                    });
+                if (action.payload.valuePriority === 'All') {
+                    // Якщо "All", повертаємо всі задачі
+                    taskList.filteredTasks = [...taskList.tasks];
+                    console.log(taskList.filteredTasks = [...taskList.tasks])
+                } else {
+                    // Фільтруємо задачі за пріоритетом
+                    taskList.filteredTasks = taskList.tasks.filter((task) => task.priority === action.payload.valuePriority);
+                    console.log(taskList.filteredTasks)
                 }
             }
         }
-
 
     },
 });

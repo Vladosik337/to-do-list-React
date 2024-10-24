@@ -9,4 +9,5 @@ export type TaskList = {
     id: string;
     title: string;
     tasks: Task[];
+    filteredTasks: Task[];
 };
