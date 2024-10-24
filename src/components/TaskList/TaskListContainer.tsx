@@ -10,6 +10,7 @@ import {
     removeTaskList,
     toggleTaskCompletion, updateTaskTitle
 } from "../../features/taskListsSlice.ts";
+import FilterPriority from "./FilterPriority.tsx";
 
 
 const TaskListContainer: React.FC = () => {
@@ -75,8 +76,10 @@ const TaskListContainer: React.FC = () => {
                     <ul className="mt-2 w-full space-y-2">
                         {taskList.tasks.map((task) => (
                             <TaskItem
+                                listId={taskList.id}
+                                taskId={task.id}
+                                currentPriority={task.priority}
                                 key={task.id}
-                                id={task.id}
                                 title={task.title}
                                 isCompleted={task.isCompleted}
                                 onToggleCompletion={() => handleToggleTaskCompletion(taskList.id, task.id)}
@@ -85,6 +88,7 @@ const TaskListContainer: React.FC = () => {
                             />
                         ))}
                     </ul>
+                    <FilterPriority/>
                 </div>
             ))}
         </div>

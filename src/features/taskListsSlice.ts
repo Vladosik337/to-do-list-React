@@ -17,8 +17,9 @@ const initialState = <TaskListState>{
             id: uuidv4(),
             title: 'Init list',
             tasks: [
-                {id: uuidv4(), title: 'Init task', isCompleted: false},
-                {id: uuidv4(), title: 'Init task', isCompleted: true}
+                {id: uuidv4(), title: 'Init task 1', isCompleted: false, priority: 'low'},
+                {id: uuidv4(), title: 'Init task 2', isCompleted: false, priority: 'high'},
+                {id: uuidv4(), title: 'Init task 3', isCompleted: true, priority: 'medium'},
             ]
         }
     ],
@@ -27,7 +28,7 @@ const initialState = <TaskListState>{
 // Створення слайсу taskLists з двома ред'юсерами: додавання списку задач і додавання задачі до списку
 const taskListsSlice = createSlice({
     name: 'taskLists',
-    initialState, // Початковий стан
+    initialState,
     reducers: {
         // Ред'юсер для додавання нового списку завдань
         addTaskList: (state, action: PayloadAction<TaskList>) => {
@@ -42,6 +43,7 @@ const taskListsSlice = createSlice({
                     id: `task-${uuidv4()}`,
                     title: action.payload.taskTitle,
                     isCompleted: false,
+                    priority: 'med'
                 });
             }
         },
@@ -84,6 +86,19 @@ const taskListsSlice = createSlice({
                 }
             }
         },
+        changePriorityTask: (state, action: PayloadAction<{
+            listId: string,
+            taskId: string,
+            valuePriority: string
+        }>) => {
+            const taskList = state.taskLists.find((list) => list.id === action.payload.listId);
+            if (taskList) {
+                const task = taskList.tasks.find((task) => task.id === action.payload.taskId);
+                if (task) {
+                    task.priority = action.payload.valuePriority;
+                }
+            }
+        },
     },
 });
 
@@ -95,7 +110,8 @@ export const {
     removeTaskFromList,
     removeTaskList,
     updateTaskTitle,
-    toggleTaskCompletion
+    toggleTaskCompletion,
+    changePriorityTask
 } = taskListsSlice.actions;
 export default taskListsSlice.reducer;
 
