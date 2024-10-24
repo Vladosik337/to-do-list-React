@@ -1,8 +1,5 @@
 import React from 'react';
 import TaskPriority from "./TaskPriority.tsx";
-import {AppDispatch} from "../../redux/store.ts";
-import {useDispatch} from "react-redux";
-import {priorityTask} from "../../features/taskListsSlice.ts";
 
 interface TaskItemProps {
     listId: string;

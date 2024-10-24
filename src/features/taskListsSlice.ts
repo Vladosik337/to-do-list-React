@@ -7,7 +7,7 @@ import {Simulate} from "react-dom/test-utils";
 import stalled = Simulate.stalled;
 
 interface TaskListState {
-    taskLists: TaskList[]; // Інтерфейс стану списку завдань (масив списків завдань)
+    taskLists: TaskList[];
 }
 
 // Початковий стан
@@ -20,11 +20,13 @@ const initialState = <TaskListState>{
                 {id: uuidv4(), title: 'Init task 1', isCompleted: false, priority: 'low'},
                 {id: uuidv4(), title: 'Init task 2', isCompleted: false, priority: 'high'},
                 {id: uuidv4(), title: 'Init task 3', isCompleted: true, priority: 'medium'},
-            ]
+            ],
         }
     ],
 };
 
+
+const filterTask: [] = []
 // Створення слайсу taskLists з двома ред'юсерами: додавання списку задач і додавання задачі до списку
 const taskListsSlice = createSlice({
     name: 'taskLists',
@@ -86,6 +88,7 @@ const taskListsSlice = createSlice({
                 }
             }
         },
+        // Ред'юсер для вибору приорітету завдання
         changePriorityTask: (state, action: PayloadAction<{
             listId: string,
             taskId: string,
@@ -99,6 +102,38 @@ const taskListsSlice = createSlice({
                 }
             }
         },
+        // Ред'юсер для фільтру приорітету завдань
+        filterTaskPriority: (state, action: PayloadAction<{
+            listId: string,
+            taskIds: string[], // Змінюємо на масив
+            valuePriority: string
+        }>) => {
+            const taskList = state.taskLists.find((list) => list.id === action.payload.listId);
+            if (taskList) {
+                if (Array.isArray(action.payload.taskIds)) {
+                    action.payload.taskIds.forEach((taskId) => {
+                        const task = taskList.tasks.find((task) => task.id === taskId);
+                        if (task) {
+                            if (action.payload.valuePriority === 'low') {
+                                console.log('action = Low')
+                                console.log(taskList)
+                                task.filter((task) => task.id.action.payload.valuePriority === 'low')
+                                console.log(task.filter((task) => task.id.action.payload.valuePriority === 'low'))
+
+                            } else if (action.payload.valuePriority === 'medium') {
+                                console.log('action = Medium')
+                            } else if (action.payload.valuePriority === 'high') {
+                                console.log('action = High')
+                            } else {
+                                console.log('action = All')
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+
     },
 });
 
@@ -111,7 +146,8 @@ export const {
     removeTaskList,
     updateTaskTitle,
     toggleTaskCompletion,
-    changePriorityTask
+    changePriorityTask,
+    filterTaskPriority
 } = taskListsSlice.actions;
 export default taskListsSlice.reducer;
 

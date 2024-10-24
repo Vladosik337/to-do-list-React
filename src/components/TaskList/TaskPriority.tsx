@@ -22,7 +22,6 @@ const TaskPriority: React.FC<TaskPriority> = ({listId, taskId, currentPriority})
                 <option value="high">High</option>
                 <option value="medium">Medium</option>
                 <option value="low">Low</option>
-                {/* Додаємо варіант "ЛОВ" */}
             </select>
         </div>
     );
