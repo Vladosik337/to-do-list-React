@@ -3,15 +3,22 @@ import {createRoot} from 'react-dom/client';
 import {Provider} from 'react-redux';
 import App from './App.tsx';
 import store from './redux/store';
-import {fetchTodoById, fetchTodoAll, fetchTodoPost, fetchTodoDeleteById} from './api/api.ts'
+import {Api} from './api/api.ts'
 
+// Створення  класу Api
+const todoApi = new Api();
 
-// Виклик fetchTodos
-// fetchTodoPost();
-// fetchTodoAll();
-// fetchTodoById(3)
-// fetchTodoDeleteById(4);
-// fetchTodoAll();
+// Виклик методів класу
+// todoApi.createTodo({completed: false, title: 'asdop'});
+// todoApi.getTodoById(5);
+// todoApi.deleteTodoById(5);;
+// todoApi.deleteAllTodos();
+await todoApi.updateTodoById(43, {
+    title: 'Новий заголовок',
+    completed: true
+});
+todoApi.getAllTodos();
+
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>

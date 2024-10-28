@@ -1,45 +1,105 @@
-import axios from "axios";
+import axios, {AxiosInstance} from "axios";
 
-// Пост запит на додання тасок
-export async function fetchTodoPost() {
-    try {
-        await axios.post('https://jsonplaceholder.typicode.com/todos', {
-            completed: false,
-            id: 3,
-            title: "test1122"
+interface Todo {
+    completed: boolean;
+    id: number;
+    title: string;
+}
+
+export class Api {
+    private api: AxiosInstance;
+
+    constructor() {
+        this.api = axios.create({
+            baseURL: 'http://localhost:5005',
+            paramsSerializer: {
+                indexes: null,
+            },
         });
-    } catch (error) {
-        console.error("Помилка під час запиту POST:", error);
     }
-}
 
-// Отримання всіх тасок
-export async function fetchTodoAll() {
-    try {
-        const response = await axios.get('http://localhost:5005/todo');
-        console.log(response.data);
-    } catch (error) {
-        console.error("Помилка під час запиту(fetchTodoAll):", error);
+    // Створення нової задачі
+    async createTodo(todo: Omit<Todo, 'id'>): Promise<Todo> {
+        try {
+            const response = await this.api.post<Todo>('/todo', todo);
+            console.log("Задача успішно додана:", response.data);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                console.error("Помилка під час створення задачі:", error.message);
+                throw error;
+            }
+            throw new Error("Невідома помилка під час створення задачі");
+        }
     }
-}
 
-// Отримання тасок за ID
-export async function fetchTodoById(todoId) {
-    try {
-        const response = await axios.get(`http://localhost:5005/todo/${todoId}`);
-        console.log(response.data.title);
-    } catch (error) {
-        console.error("Помилка під час запиту (fetchTodoById):", error);
+    // Отримання всіх задач
+    async getAllTodos(): Promise<Todo[]> {
+        try {
+            const response = await this.api.get<Todo[]>('/todo');
+            console.log(response.data);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                console.error("Помилка під час отримання всіх задач:", error.message);
+                throw error;
+            }
+            throw new Error("Невідома помилка під час отримання всіх задач");
+        }
     }
-}
 
-//Видалення тасок за ID
-export async function fetchTodoDeleteById(todoId) {
-    try {
-        const response = await axios.delete(`http://localhost:5005/todo/${todoId}`)
-        console.log(`таска за ID${response.data.id} ВИДАЛЕНА!`);
-    } catch (error) {
-        console.error("Помилка під час запиту (fetchTodoDeleteById):", error)
+    // Отримання задачі за ID
+    async getTodoById(todoId: number): Promise<Todo> {
+        try {
+            const response = await this.api.get<Todo>(`/todo/${todoId}`);
+            console.log(response.data.title);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                console.error("Помилка під час отримання задачі за ID:", error.message);
+                throw error;
+            }
+            throw new Error("Невідома помилка під час отримання задачі за ID");
+        }
+    }
+
+    // Видалення задачі за ID
+    async deleteTodoById(todoId: number): Promise<void> {
+        try {
+            await this.api.delete(`/todo/${todoId}`);
+            console.log(`Задача за ID ${todoId} видалена!`);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                console.error("Помилка під час видалення задачі за ID:", error.message);
+                throw error;
+            }
+            throw new Error("Невідома помилка під час видалення задачі за ID");
+        }
+    }
+
+    // Видалення всіх задач
+    async deleteAllTodos(): Promise<void> {
+        try {
+            await this.api.delete(`/todo`);
+            console.log(`Всі задачі видалені!`);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                console.error("Помилка під час видалення всіх задач:", error.message);
+                throw error;
+            }
+            throw new Error("Невідома помилка під час видалення всіх задач");
+        }
+    }
+
+    // Оновлення задач
+    async updateTodoById(todoId: number, updatedTodo: Partial<Omit<Todo, 'id'>>): Promise<Todo> {
+        try {
+            const response = await this.api.patch<Todo>(`/todo/${todoId}`, updatedTodo);
+            console.log(`Задача за ID ${todoId} успішно оновлена:`, response.data);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error)) {
+                console.error("Помилка під час оновлення задачі за ID:", error.message);
+                throw error;
+            }
+            throw new Error("Невідома помилка під час оновлення задачі за ID");
+        }
     }
 
 }
