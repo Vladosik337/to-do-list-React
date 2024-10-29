@@ -1,23 +1,15 @@
 import {createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {TaskList} from '../Types'; // Переконайтеся, що цей шлях правильний і `TaskList` експортується
+import {TaskList} from '../Types';
 import {v4 as uuidv4} from 'uuid';
 import {Api} from "../api/api.ts";
 
-interface Task {
-    id: string;
-    title: string;
-    isCompleted: boolean;
-    priority: string;
-}
-
 interface TaskListState {
     taskLists: TaskList[];
-    loading: boolean;
-    error: string | null;
 }
 
 const todoApi = new Api();
 
+// Async thunk to create a task
 export const createTodo = createAsyncThunk<TaskList, Partial<TaskList>, { rejectValue: string }>(
     'todos/createTodo',
     async (newTodo, {rejectWithValue}) => {
@@ -29,31 +21,42 @@ export const createTodo = createAsyncThunk<TaskList, Partial<TaskList>, { reject
     }
 );
 
+// Async thunk to get all tasks
+export const getAllTasks = createAsyncThunk<TaskList[], void, { rejectValue: string }>(
+    'taskLists/getAllTasks',
+    async (_, {rejectWithValue}) => {
+        try {
+            const response = await todoApi.getAllTodos();
+            return response;
+        } catch (error) {
+            return rejectWithValue('Не вдалося отримати задачі');
+        }
+    }
+);
+
+
 const initialState: TaskListState = {
     taskLists: [
-        {
-            id: `taskList-${uuidv4()}`,
-            title: 'Init list',
-            tasks: [
-                {id: `task-${uuidv4()}`, title: 'Init task 1', isCompleted: false, priority: 'low'},
-                {id: `task-${uuidv4()}`, title: 'Init task 2', isCompleted: false, priority: 'high'},
-                {id: `task-${uuidv4()}`, title: 'Init task 3', isCompleted: true, priority: 'medium'},
-                {id: `task-${uuidv4()}`, title: 'Init task 4', isCompleted: false, priority: 'low'},
-                {id: `task-${uuidv4()}`, title: 'Init task 5', isCompleted: true, priority: 'low'},
-            ],
-            filteredTasks: [],
-        }
+        // {
+        //     id: `taskList-${uuidv4()}`,
+        //     title: 'Init list',
+        //     tasks: [
+        //         {id: `task-${uuidv4()}`, title: 'Init task 1', isCompleted: false, priority: 'low'},
+        //         {id: `task-${uuidv4()}`, title: 'Init task 2', isCompleted: false, priority: 'high'},
+        //         {id: `task-${uuidv4()}`, title: 'Init task 3', isCompleted: true, priority: 'medium'},
+        //         {id: `task-${uuidv4()}`, title: 'Init task 4', isCompleted: false, priority: 'low'},
+        //         {id: `task-${uuidv4()}`, title: 'Init task 5', isCompleted: true, priority: 'low'},
+        //     ],
+        //     filteredTasks: [],
+        // }
     ],
-    loading: false,
-    error: null,
 };
-
 const taskListsSlice = createSlice({
     name: 'taskLists',
     initialState,
     reducers: {
-        addTaskList: (state: TaskListState, action: PayloadAction<TaskList>) => {
-            state.taskLists = [action.payload, ...state.taskLists];
+        addTaskList: (state, action: PayloadAction<TaskList>) => {
+            state.taskLists.unshift(action.payload);
         },
         addTaskToList: (state: TaskListState, action: PayloadAction<{ listId: string; taskTitle: string }>) => {
             const taskList = state.taskLists.find((list) => list.id === action.payload.listId);
@@ -128,21 +131,17 @@ const taskListsSlice = createSlice({
             }
         }
     },
-    // extraReducers: (builder) => {
-    //     builder
-    //         .addCase(fetchTodos.pending, (state) => {
-    //             state.loading = true;
-    //             state.error = null;
-    //         })
-    //         .addCase(fetchTodos.fulfilled, (state, action: PayloadAction<TaskList[]>) => {
-    //             state.loading = false;
-    //             state.taskLists = action.payload;
-    //         })
-    //         .addCase(fetchTodos.rejected, (state, action) => {
-    //             state.loading = false;
-    //             state.error = action.payload as string;
-    //         });
-    // }
+    extraReducers: (builder) => {
+        builder
+            .addCase(getAllTasks.fulfilled, (state, action: PayloadAction<TaskList[]>) => {
+                console.log('Fetched task lists:', action.payload);
+                state.taskLists = action.payload;
+            })
+            .addCase(getAllTasks.rejected, (state, action) => {
+                console.error(action.payload);
+            });
+    }
+
 });
 
 export const {

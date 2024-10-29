@@ -32,11 +32,11 @@ export class Api {
         }
     }
 
-    // Take all tasks
+// Take all tasks
     async getAllTodos(): Promise<Todo[]> {
         try {
             const response = await this.api.get<Todo[]>('/todo');
-            console.log(response.data);
+            return response.data; // Додано повернення даних
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
                 console.error("Помилка під час отримання всіх задач:", error.message);
@@ -45,6 +45,7 @@ export class Api {
             throw new Error("Невідома помилка під час отримання всіх задач");
         }
     }
+
 
     // Take a task by ID
     async getTodoById(todoId: number): Promise<Todo> {

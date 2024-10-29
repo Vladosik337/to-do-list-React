@@ -1,13 +1,13 @@
-export type Task = {
+export interface Task {
     id: string;
     title: string;
     isCompleted: boolean;
-    priority: string
-};
+    priority: string;
+}
 
-export type TaskList = {
+export interface TaskList {
     id: string;
     title: string;
     tasks: Task[];
-    filteredTasks: Task[];
-};
+    filteredTasks?: Task[];
+}
