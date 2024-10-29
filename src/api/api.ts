@@ -18,7 +18,7 @@ export class Api {
         });
     }
 
-    // Створення нової задачі
+    // Creating a new taskі
     async createTodo(todo: Omit<Todo, 'id'>): Promise<Todo> {
         try {
             const response = await this.api.post<Todo>('/todo', todo);
@@ -32,7 +32,7 @@ export class Api {
         }
     }
 
-    // Отримання всіх задач
+    // Take all tasks
     async getAllTodos(): Promise<Todo[]> {
         try {
             const response = await this.api.get<Todo[]>('/todo');
@@ -46,7 +46,7 @@ export class Api {
         }
     }
 
-    // Отримання задачі за ID
+    // Take a task by ID
     async getTodoById(todoId: number): Promise<Todo> {
         try {
             const response = await this.api.get<Todo>(`/todo/${todoId}`);
@@ -60,7 +60,7 @@ export class Api {
         }
     }
 
-    // Видалення задачі за ID
+    // Delete task by ID
     async deleteTodoById(todoId: number): Promise<void> {
         try {
             await this.api.delete(`/todo/${todoId}`);
@@ -74,7 +74,7 @@ export class Api {
         }
     }
 
-    // Видалення всіх задач
+    // Delete all tasks
     async deleteAllTodos(): Promise<void> {
         try {
             await this.api.delete(`/todo`);
@@ -88,7 +88,7 @@ export class Api {
         }
     }
 
-    // Оновлення задач
+    // Update tasks
     async updateTodoById(todoId: number, updatedTodo: Partial<Omit<Todo, 'id'>>): Promise<Todo> {
         try {
             const response = await this.api.patch<Todo>(`/todo/${todoId}`, updatedTodo);

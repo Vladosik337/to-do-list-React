@@ -1,17 +1,35 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {TaskList} from '../Types';
+import {createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {TaskList} from '../Types'; // Переконайтеся, що цей шлях правильний і `TaskList` експортується
 import {v4 as uuidv4} from 'uuid';
-import store from "../redux/store.ts";
-import {list} from "postcss";
-import {Simulate} from "react-dom/test-utils";
-import stalled = Simulate.stalled;
+import {Api} from "../api/api.ts";
+
+interface Task {
+    id: string;
+    title: string;
+    isCompleted: boolean;
+    priority: string;
+}
 
 interface TaskListState {
     taskLists: TaskList[];
+    loading: boolean;
+    error: string | null;
 }
 
-// Початковий стан
-const initialState = <TaskListState>{
+const todoApi = new Api();
+
+export const createTodo = createAsyncThunk<TaskList, Partial<TaskList>, { rejectValue: string }>(
+    'todos/createTodo',
+    async (newTodo, {rejectWithValue}) => {
+        try {
+            return await todoApi.createTodo({completed: false, title: newTodo.title || 'Нова задача'});
+        } catch {
+            return rejectWithValue('Не вдалося створити задачу');
+        }
+    }
+);
+
+const initialState: TaskListState = {
     taskLists: [
         {
             id: `taskList-${uuidv4()}`,
@@ -26,19 +44,18 @@ const initialState = <TaskListState>{
             filteredTasks: [],
         }
     ],
+    loading: false,
+    error: null,
 };
 
-// Створення слайсу taskLists з двома ред'юсерами: додавання списку задач і додавання задачі до списку
 const taskListsSlice = createSlice({
     name: 'taskLists',
     initialState,
     reducers: {
-        // Ред'юсер для додавання нового списку завдань
-        addTaskList: (state, action: PayloadAction<TaskList>) => {
+        addTaskList: (state: TaskListState, action: PayloadAction<TaskList>) => {
             state.taskLists = [action.payload, ...state.taskLists];
         },
-        // Ред'юсер для додавання нової задачі до певного списку
-        addTaskToList: (state, action: PayloadAction<{ listId: string; taskTitle: string }>) => {
+        addTaskToList: (state: TaskListState, action: PayloadAction<{ listId: string; taskTitle: string }>) => {
             const taskList = state.taskLists.find((list) => list.id === action.payload.listId);
             if (taskList) {
                 taskList.tasks = [{
@@ -49,8 +66,11 @@ const taskListsSlice = createSlice({
                 }, ...taskList.tasks];
             }
         },
-        // Ред'юсер для зміни назви задачи
-        editTaskName: (state, action: PayloadAction<{ listId: string, taskId: string, newTitle: string }>) => {
+        editTaskName: (state: TaskListState, action: PayloadAction<{
+            listId: string,
+            taskId: string,
+            newTitle: string
+        }>) => {
             const taskList = state.taskLists.find((list) => list.id === action.payload.listId);
             if (taskList) {
                 const task = taskList.tasks.find((task) => task.id === action.payload.taskId);
@@ -59,37 +79,31 @@ const taskListsSlice = createSlice({
                 }
             }
         },
-        // Ред'юсер для видалення задачи з списка
-        removeTaskFromList: (state, action: PayloadAction<{ listId: string, taskId: string }>) => {
+        removeTaskFromList: (state: TaskListState, action: PayloadAction<{ listId: string, taskId: string }>) => {
             const taskList = state.taskLists.find((list) => list.id === action.payload.listId);
             if (taskList) {
-                taskList.tasks = taskList.tasks.filter((task) => task.id !== action.payload.taskId)
+                taskList.tasks = taskList.tasks.filter((task) => task.id !== action.payload.taskId);
             }
         },
-
-        // Ред'юсер для удаления списка задач
-        removeTaskList: (state, action: PayloadAction<{ listId: string }>) => {
-            state.taskLists = state.taskLists.filter((taskList) => taskList.id !== action.payload.listId)
+        removeTaskList: (state: TaskListState, action: PayloadAction<{ listId: string }>) => {
+            state.taskLists = state.taskLists.filter((taskList) => taskList.id !== action.payload.listId);
         },
-        // Ред'юсер для изменения названия списка
-        updateTaskTitle: (state, action: PayloadAction<{ listId: string, newTitle: string }>) => {
-            const taskList = state.taskLists.find((list) => list.id === action.payload.listId)
+        updateTaskTitle: (state: TaskListState, action: PayloadAction<{ listId: string, newTitle: string }>) => {
+            const taskList = state.taskLists.find((list) => list.id === action.payload.listId);
             if (taskList) {
-                taskList.title = action.payload.newTitle
+                taskList.title = action.payload.newTitle;
             }
         },
-        // Ред'юсер для переключения состояния выполнения задачи
-        toggleTaskCompletion: (state, action: PayloadAction<{ listId: string, taskId: string }>) => {
-            const taskList = state.taskLists.find((list) => list.id === action.payload.listId)
+        toggleTaskCompletion: (state: TaskListState, action: PayloadAction<{ listId: string, taskId: string }>) => {
+            const taskList = state.taskLists.find((list) => list.id === action.payload.listId);
             if (taskList) {
-                const task = taskList.tasks.find((task) => task.id === action.payload.taskId)
+                const task = taskList.tasks.find((task) => task.id === action.payload.taskId);
                 if (task) {
-                    task.isCompleted = !task.isCompleted
+                    task.isCompleted = !task.isCompleted;
                 }
             }
         },
-        // Ред'юсер для вибору приорітету завдання
-        changePriorityTask: (state, action: PayloadAction<{
+        changePriorityTask: (state: TaskListState, action: PayloadAction<{
             listId: string,
             taskId: string,
             valuePriority: string
@@ -102,33 +116,34 @@ const taskListsSlice = createSlice({
                 }
             }
         },
-        // Ред'юсер для фільтру приорітету завдань
-        filterTaskPriority: (state, action: PayloadAction<{
+        filterTaskPriority: (state: TaskListState, action: PayloadAction<{
             listId: string,
             valuePriority: string
         }>) => {
             const taskList = state.taskLists.find((list) => list.id === action.payload.listId);
             if (taskList) {
-                if (action.payload.valuePriority === 'All') {
-                    // Якщо "All", повертаємо всі задачі
-                    console.log('-------------All--------------')
-                    taskList.filteredTasks = [...taskList.tasks];
-                    console.log(taskList.filteredTasks)
-                    console.log('-------------All-END-------------')
-                } else {
-                    // Фільтруємо задачі за пріоритетом
-                    console.log('-------------Filter--------------')
-                    taskList.filteredTasks = taskList.tasks.filter((task) => task.priority === action.payload.valuePriority);
-                    console.log(taskList.filteredTasks)
-                    console.log('-------------Filter-END-------------')
-
-                }
+                taskList.filteredTasks = action.payload.valuePriority === 'All'
+                    ? [...taskList.tasks]
+                    : taskList.tasks.filter((task) => task.priority === action.payload.valuePriority);
             }
         }
-
     },
+    // extraReducers: (builder) => {
+    //     builder
+    //         .addCase(fetchTodos.pending, (state) => {
+    //             state.loading = true;
+    //             state.error = null;
+    //         })
+    //         .addCase(fetchTodos.fulfilled, (state, action: PayloadAction<TaskList[]>) => {
+    //             state.loading = false;
+    //             state.taskLists = action.payload;
+    //         })
+    //         .addCase(fetchTodos.rejected, (state, action) => {
+    //             state.loading = false;
+    //             state.error = action.payload as string;
+    //         });
+    // }
 });
-
 
 export const {
     addTaskList,
@@ -141,5 +156,5 @@ export const {
     changePriorityTask,
     filterTaskPriority
 } = taskListsSlice.actions;
-export default taskListsSlice.reducer;
 
+export default taskListsSlice.reducer;

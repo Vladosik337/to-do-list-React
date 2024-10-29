@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles/style.scss';
 import TaskListContainer from './components/TaskList/TaskListContainer';
-import CreateTaskListTitle from "./components/CreateTaskListTitle.tsx";
+import CreateTaskListTitle from "./components/CreateTaskListTitle";
 
 function App() {
     return (
@@ -16,4 +16,4 @@ function App() {
     );
 }
 
-export default App;
+export default App
