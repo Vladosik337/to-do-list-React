@@ -22,18 +22,28 @@ export const createTodo = createAsyncThunk<TaskList, Partial<TaskList>, { reject
 );
 
 // Async thunk to get all tasks
-export const getAllTasks = createAsyncThunk<TaskList[], void, { rejectValue: string }>(
+export const getAllTasks = createAsyncThunk<TaskList[], { rejectValue: string }>(
     'taskLists/getAllTasks',
     async (_, {rejectWithValue}) => {
         try {
-            const response = await todoApi.getAllTodos();
-            return response;
+            return await todoApi.getAllTodos();
         } catch (error) {
             return rejectWithValue('Не вдалося отримати задачі');
         }
     }
 );
 
+// Async thunk delete task for id
+export const deleteTaskForId = createAsyncThunk<string, { rejectValue: string }>(
+    'taskLists/deleteTaskForId',
+    async (id, { rejectWithValue }) => {
+        try {
+            await todoApi.deleteTodoById(Number(id));
+        } catch (error) {
+            return rejectWithValue('Не вдалося видалити задачу');
+        }
+    }
+);
 
 const initialState: TaskListState = {
     taskLists: [
@@ -139,8 +149,13 @@ const taskListsSlice = createSlice({
             })
             .addCase(getAllTasks.rejected, (state, action) => {
                 console.error(action.payload);
+            })
+            .addCase(deleteTaskForId.fulfilled, (state, action) => {
+                state.taskLists = state.taskLists.filter((task) => task.id !== action.meta.arg);
+                console.log('Fetched task lists:', state.taskLists);
+
             });
-    }
+    },
 
 });
 

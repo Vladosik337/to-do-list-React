@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from "../../redux/store.ts";
-import {getAllTasks, toggleTaskCompletion, updateTaskTitle} from "../../features/taskListsSlice.ts";
+import {deleteTaskForId, getAllTasks, toggleTaskCompletion, updateTaskTitle} from "../../features/taskListsSlice.ts";
 
 const GetTasks = () => {
     const taskLists = useSelector((state: RootState) => state.taskLists.taskLists);
@@ -11,7 +11,6 @@ const GetTasks = () => {
         dispatch(getAllTasks());
     }, [dispatch]);
 
-    // Перевірка на undefined або пустий масив
     if (!taskLists || taskLists.length === 0) {
         return <div className="text-center text-gray-600">Loading tasks...</div>;
     }
@@ -22,6 +21,10 @@ const GetTasks = () => {
 
     const handleTitleChange = (listId: string, newTitle: string) => {
         dispatch(updateTaskTitle({listId, title: newTitle}));
+    };
+
+    const deleteTask = (listId: string) => {
+        dispatch(deleteTaskForId(listId));
     };
 
     return (
@@ -43,6 +46,7 @@ const GetTasks = () => {
                             onChange={(e) => handleTitleChange(list.id, e.target.value)}
                             className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
+                        <button onClick={()=> deleteTask(list.id)}>Del</button>
                     </li>
                 ))}
             </ul>
