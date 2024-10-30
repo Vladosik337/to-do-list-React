@@ -94,6 +94,7 @@ export class Api {
         try {
             const response = await this.api.patch<Todo>(`/todo/${todoId}`, updatedTodo);
             console.log(`Задача за ID ${todoId} успішно оновлена:`, response.data);
+            return response.data;
         } catch (error: unknown) {
             if (axios.isAxiosError(error)) {
                 console.error("Помилка під час оновлення задачі за ID:", error.message);
@@ -102,5 +103,6 @@ export class Api {
             throw new Error("Невідома помилка під час оновлення задачі за ID");
         }
     }
+
 
 }

@@ -2,6 +2,7 @@ import {createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {TaskList} from '../Types';
 import {v4 as uuidv4} from 'uuid';
 import {Api} from "../api/api.ts";
+import {RootState} from "../redux/store.ts";
 
 interface TaskListState {
     taskLists: TaskList[];
@@ -12,9 +13,11 @@ const todoApi = new Api();
 // Async thunk to create a task
 export const createTodo = createAsyncThunk<TaskList, Partial<TaskList>, { rejectValue: string }>(
     'todos/createTodo',
-    async (newTodo, {rejectWithValue}) => {
+    async (newTodo, { rejectWithValue, dispatch }) => {
         try {
-            return await todoApi.createTodo({completed: false, title: newTodo.title || 'Нова задача'});
+            const response = await todoApi.createTodo({ completed: false, title: newTodo.title || 'Нова задача' });
+            dispatch(getAllTasks());
+            return response.data;
         } catch {
             return rejectWithValue('Не вдалося створити задачу');
         }
@@ -26,7 +29,8 @@ export const getAllTasks = createAsyncThunk<TaskList[], { rejectValue: string }>
     'taskLists/getAllTasks',
     async (_, {rejectWithValue}) => {
         try {
-            return await todoApi.getAllTodos();
+            const response = await todoApi.getAllTodos();
+            return response
         } catch (error) {
             return rejectWithValue('Не вдалося отримати задачі');
         }
@@ -38,12 +42,43 @@ export const deleteTaskForId = createAsyncThunk<string, { rejectValue: string }>
     'taskLists/deleteTaskForId',
     async (id, { rejectWithValue }) => {
         try {
-            await todoApi.deleteTodoById(Number(id));
+            return await todoApi.deleteTodoById(Number(id));
         } catch (error) {
             return rejectWithValue('Не вдалося видалити задачу');
         }
     }
 );
+
+// Async thunk update task name or completed
+export const toggleTaskCompletionForId = createAsyncThunk<void, { taskId: string, isCompleted: boolean }, { rejectValue: string }>(
+    'taskLists/toggleTaskCompletion',
+    async ({ taskId, isCompleted }, { rejectWithValue }) => {
+        const id = Number(taskId);
+        if (isNaN(id)) {
+            return rejectWithValue('ID задачі не є числом');
+        }
+        try {
+            await todoApi.updateTodoById(id, { completed: !isCompleted });
+        } catch (error) {
+            return rejectWithValue('Не вдалося оновити статус задачі');
+        }
+    }
+);
+
+// Async thunk to update task title
+export const updateTaskTitleForId = createAsyncThunk<void, { taskId: string; newTitle: string }, { rejectValue: string }>(
+    'taskLists/updateTaskTitle',
+    async ({ taskId, newTitle }, { rejectWithValue, getState }) => {
+        try {
+           await todoApi.updateTodoById(Number(taskId), { title: newTitle });
+
+        } catch (error) {
+            return rejectWithValue('Не вдалося оновити статус задачі');
+        }
+    }
+);
+
+
 
 const initialState: TaskListState = {
     taskLists: [
@@ -152,9 +187,18 @@ const taskListsSlice = createSlice({
             })
             .addCase(deleteTaskForId.fulfilled, (state, action) => {
                 state.taskLists = state.taskLists.filter((task) => task.id !== action.meta.arg);
-                console.log('Fetched task lists:', state.taskLists);
-
+            })
+            .addCase(toggleTaskCompletionForId.fulfilled, (state, action) => {
+                const { taskId, isCompleted } = action.meta.arg;
+                // Знаходимо список, який містить цю задачу
+                state.taskLists.find((list) =>{
+                    list.tasks && list.tasks.some((task) => task.id === taskId);
+                    if (list.tasks) {
+                        list.tasks.isCompleted = !isCompleted;
+                    }
+                });
             });
+
     },
 
 });
